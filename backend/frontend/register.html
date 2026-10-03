@@ -1,0 +1,1591 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Register - RescueMeal</title>
+
+    <link rel="icon"
+          type="image/png"
+          href="/frontend/favicon.png">
+
+    <style>
+
+        /* =====================================================
+           RESET
+        ===================================================== */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            background: #f5f8f6;
+
+            color: #26332c;
+
+            line-height: 1.6;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+
+        /* =====================================================
+           HEADER
+        ===================================================== */
+
+        header {
+            position: sticky;
+
+            top: 0;
+
+            z-index: 1000;
+
+            background:
+                rgba(255, 255, 255, 0.97);
+
+            backdrop-filter: blur(10px);
+
+            border-bottom:
+                1px solid #e2e9e4;
+
+            box-shadow:
+                0 3px 15px
+                rgba(0, 0, 0, 0.05);
+        }
+
+        .navbar {
+            width: min(92%, 1200px);
+
+            min-height: 76px;
+
+            margin: auto;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+        }
+
+
+        /* =====================================================
+           LOGO
+        ===================================================== */
+
+        .logo {
+            display: flex;
+
+            align-items: center;
+
+            gap: 9px;
+
+            color: #1f7048;
+
+            font-size: 27px;
+
+            font-weight: 800;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+
+            object-fit: contain;
+        }
+
+
+        /* =====================================================
+           NAVIGATION
+        ===================================================== */
+
+        nav {
+            display: flex;
+
+            align-items: center;
+
+            gap: 27px;
+        }
+
+        nav a {
+            position: relative;
+
+            color: #37433c;
+
+            font-size: 15px;
+
+            font-weight: 600;
+
+            transition: 0.25s;
+        }
+
+        nav a:hover {
+            color: #1f7048;
+        }
+
+        nav a.active {
+            color: #1f7048;
+        }
+
+        nav a.active::after {
+            content: "";
+
+            position: absolute;
+
+            left: 0;
+
+            bottom: -8px;
+
+            width: 100%;
+
+            height: 2px;
+
+            background: #f28a2e;
+        }
+
+
+        /* =====================================================
+           REGISTER PAGE
+        ===================================================== */
+
+        .register-section {
+            min-height:
+                calc(100vh - 76px);
+
+            padding:
+                55px 20px
+                75px;
+
+            background:
+                radial-gradient(
+                    circle at 5% 15%,
+                    rgba(242,138,46,0.09),
+                    transparent 24%
+                ),
+
+                radial-gradient(
+                    circle at 95% 85%,
+                    rgba(31,112,72,0.08),
+                    transparent 25%
+                ),
+
+                #f5f8f6;
+        }
+
+
+        /* =====================================================
+           REGISTER CONTAINER
+        ===================================================== */
+
+        .register-container {
+            width: min(94%, 920px);
+
+            margin: auto;
+
+            background: white;
+
+            border:
+                1px solid #dfe8e2;
+
+            border-radius: 24px;
+
+            overflow: hidden;
+
+            box-shadow:
+                0 15px 45px
+                rgba(31,112,72,0.10);
+        }
+
+
+        /* =====================================================
+           TOP INTRO
+        ===================================================== */
+
+        .register-top {
+            padding:
+                38px 35px
+                25px;
+
+            text-align: center;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #edf8f1,
+                    #ffffff
+                );
+        }
+
+        .register-logo {
+            width: 52px;
+            height: 52px;
+
+            margin:
+                0 auto 12px;
+
+            object-fit: contain;
+        }
+
+        .register-top h1 {
+            color: #155437;
+
+            font-size: 32px;
+
+            margin-bottom: 7px;
+        }
+
+        .register-top h1 span {
+            color: #f28a2e;
+        }
+
+        .register-top p {
+            color: #69756e;
+
+            font-size: 14px;
+        }
+
+
+        /* =====================================================
+           FORM AREA
+        ===================================================== */
+
+        .form-area {
+            padding:
+                35px 40px
+                42px;
+        }
+
+
+        /* =====================================================
+           SECTION TITLE
+        ===================================================== */
+
+        .form-section-title {
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+            margin-bottom: 21px;
+
+            color: #155437;
+
+            font-size: 18px;
+
+            font-weight: 800;
+        }
+
+        .form-section-title::after {
+            content: "";
+
+            flex: 1;
+
+            height: 1px;
+
+            background: #e1e9e4;
+        }
+
+
+        /* =====================================================
+           FORM GRID
+        ===================================================== */
+
+        .form-grid {
+            display: grid;
+
+            grid-template-columns:
+                1fr 1fr;
+
+            gap:
+                0 18px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .full-width {
+            grid-column:
+                1 / -1;
+        }
+
+
+        /* =====================================================
+           LABEL
+        ===================================================== */
+
+        .form-group label {
+            display: block;
+
+            margin-bottom: 7px;
+
+            color: #344139;
+
+            font-size: 13px;
+
+            font-weight: 700;
+        }
+
+        .required {
+            color: #d6533f;
+        }
+
+
+        /* =====================================================
+           INPUTS
+        ===================================================== */
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+
+            border:
+                1px solid #d7e1da;
+
+            border-radius: 10px;
+
+            padding:
+                12px 13px;
+
+            outline: none;
+
+            background: #fbfdfb;
+
+            color: #26332c;
+
+            font-size: 14px;
+
+            transition:
+                border-color 0.2s ease,
+                box-shadow 0.2s ease,
+                background 0.2s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: #1f7048;
+
+            background: white;
+
+            box-shadow:
+                0 0 0 4px
+                rgba(31,112,72,0.08);
+        }
+
+        .form-group textarea {
+            min-height: 110px;
+
+            resize: vertical;
+        }
+
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: #9aa59e;
+        }
+
+
+        /* =====================================================
+           PASSWORD
+        ===================================================== */
+
+        .password-input {
+            padding-right: 75px !important;
+        }
+
+        .show-password {
+            position: absolute;
+
+            right: 11px;
+
+            top: 50%;
+
+            transform:
+                translateY(-50%);
+
+            border: none;
+
+            background: transparent;
+
+            color: #1f7048;
+
+            font-size: 12px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+            padding: 5px;
+        }
+
+
+        /* =====================================================
+           ROLE SELECT
+        ===================================================== */
+
+        .role-box {
+            grid-column:
+                1 / -1;
+
+            margin-bottom: 24px;
+
+            padding: 20px;
+
+            border-radius: 14px;
+
+            background: #f7faf8;
+
+            border:
+                1px solid #e0e8e3;
+        }
+
+        .role-box label {
+            margin-bottom: 9px;
+        }
+
+        .role-help {
+            margin-top: 7px;
+
+            color: #778179;
+
+            font-size: 12px;
+        }
+
+
+        /* =====================================================
+           NGO SECTION
+        ===================================================== */
+
+        #ngoFields {
+            display: none;
+
+            grid-column:
+                1 / -1;
+
+            margin-top: 3px;
+
+            padding: 22px;
+
+            background:
+                #fffaf4;
+
+            border:
+                1px solid #f0dfcb;
+
+            border-radius: 15px;
+
+            margin-bottom: 22px;
+        }
+
+        .ngo-title {
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            color: #a76625;
+
+            font-size: 16px;
+
+            font-weight: 800;
+
+            margin-bottom: 18px;
+        }
+
+        .ngo-title::before {
+            content: "🏢";
+
+            font-size: 18px;
+        }
+
+
+        /* =====================================================
+           PASSWORD REQUIREMENTS
+        ===================================================== */
+
+        .password-help {
+            margin-top: 7px;
+
+            color: #7a857e;
+
+            font-size: 11.5px;
+        }
+
+
+        /* =====================================================
+           SUBMIT
+        ===================================================== */
+
+        .submit-section {
+            margin-top: 8px;
+
+            padding-top: 24px;
+
+            border-top:
+                1px solid #e4eae6;
+
+            text-align: center;
+        }
+
+        .register-btn {
+            width: 100%;
+
+            max-width: 360px;
+
+            padding:
+                13px 22px;
+
+            border: none;
+
+            border-radius: 10px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #1f7048,
+                    #155437
+                );
+
+            color: white;
+
+            font-size: 15px;
+
+            font-weight: 800;
+
+            cursor: pointer;
+
+            box-shadow:
+                0 8px 18px
+                rgba(31,112,72,0.18);
+
+            transition: 0.25s;
+        }
+
+        .register-btn:hover {
+            transform:
+                translateY(-2px);
+
+            box-shadow:
+                0 12px 25px
+                rgba(31,112,72,0.23);
+        }
+
+        .register-btn:disabled {
+            opacity: 0.65;
+
+            cursor: not-allowed;
+
+            transform: none;
+        }
+
+
+        /* =====================================================
+           MESSAGE
+        ===================================================== */
+
+        #message {
+            min-height: 22px;
+
+            margin-top: 15px;
+
+            text-align: center;
+
+            font-size: 13px;
+
+            font-weight: 600;
+        }
+
+        .error-message {
+            color: #bd4242;
+        }
+
+        .success-message {
+            color: #2e8b57;
+        }
+
+
+        /* =====================================================
+           LOGIN LINK
+        ===================================================== */
+
+        .login-link {
+            margin-top: 18px;
+
+            text-align: center;
+
+            color: #68736c;
+
+            font-size: 13px;
+        }
+
+        .login-link a {
+            color: #1f7048;
+
+            font-weight: 800;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+
+        /* =====================================================
+           FOOTER
+        ===================================================== */
+
+        footer {
+            background: #123d29;
+
+            color: white;
+
+            padding:
+                24px 20px;
+        }
+
+        .footer-bottom {
+            width: min(92%, 1100px);
+
+            margin: auto;
+
+            text-align: center;
+
+            color:
+                rgba(255,255,255,0.60);
+
+            font-size: 12px;
+        }
+
+
+        /* =====================================================
+           RESPONSIVE
+        ===================================================== */
+
+        @media (max-width: 750px) {
+
+            .navbar {
+                flex-direction: column;
+
+                padding:
+                    15px 0;
+
+                gap: 13px;
+            }
+
+            nav {
+                gap: 16px;
+
+                flex-wrap: wrap;
+
+                justify-content: center;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .full-width,
+            .role-box,
+            #ngoFields {
+                grid-column:
+                    auto;
+            }
+
+            .form-area {
+                padding:
+                    30px 23px
+                    35px;
+            }
+
+            .register-top {
+                padding:
+                    32px 22px
+                    24px;
+            }
+        }
+
+
+        @media (max-width: 480px) {
+
+            .register-section {
+                padding:
+                    35px 12px
+                    50px;
+            }
+
+            .register-container {
+                width: 100%;
+
+                border-radius: 18px;
+            }
+
+            .register-top h1 {
+                font-size: 28px;
+            }
+
+            .form-section-title {
+                font-size: 16px;
+            }
+
+            .form-area {
+                padding:
+                    27px 17px
+                    30px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- =====================================================
+         HEADER
+    ===================================================== -->
+
+    <header>
+
+        <div class="navbar">
+
+            <a
+                href="/frontend/index.html"
+                class="logo"
+            >
+
+                <img
+                    src="/frontend/favicon.png"
+                    alt="RescueMeal Logo"
+                    class="logo-icon"
+                >
+
+                <span>
+                    RescueMeal
+                </span>
+
+            </a>
+
+
+            <nav>
+
+                <a href="/frontend/index.html">
+                    Home
+                </a>
+
+                <a href="/frontend/about.html">
+                    About
+                </a>
+
+                <a href="/frontend/login.html">
+                    Login
+                </a>
+
+                <a
+                    href="/frontend/register.html"
+                    class="active"
+                >
+                    Register
+                </a>
+
+            </nav>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- =====================================================
+         REGISTER SECTION
+    ===================================================== -->
+
+    <section class="register-section">
+
+        <div class="register-container">
+
+
+            <!-- HEADER -->
+
+            <div class="register-top">
+
+                <img
+                    src="/frontend/favicon.png"
+                    alt="RescueMeal Logo"
+                    class="register-logo"
+                >
+
+                <h1>
+                    Create Your
+                    <span>RescueMeal</span>
+                    Account
+                </h1>
+
+                <p>
+                    Join the platform and help make surplus
+                    food useful.
+                </p>
+
+            </div>
+
+
+            <!-- FORM -->
+
+            <div class="form-area">
+
+                <form id="registerForm">
+
+
+                    <!-- =========================================
+                         ACCOUNT INFORMATION
+                    ========================================== -->
+
+                    <div class="form-section-title">
+                        Account Information
+                    </div>
+
+
+                    <div class="form-grid">
+
+
+                        <!-- NAME -->
+
+                        <div class="form-group">
+
+                            <label for="name">
+                                Full Name
+                                <span class="required">*</span>
+                            </label>
+
+                            <input
+                                type="text"
+                                id="name"
+                                placeholder="Enter your full name"
+                                required
+                            >
+
+                        </div>
+
+
+                        <!-- EMAIL -->
+
+                        <div class="form-group">
+
+                            <label for="email">
+                                Email Address
+                                <span class="required">*</span>
+                            </label>
+
+                            <input
+                                type="email"
+                                id="email"
+                                placeholder="Enter your email"
+                                required
+                            >
+
+                        </div>
+
+
+                        <!-- PASSWORD -->
+
+                        <div class="form-group">
+
+                            <label for="password">
+                                Password
+                                <span class="required">*</span>
+                            </label>
+
+                            <div class="input-wrapper">
+
+                                <input
+                                    type="password"
+                                    id="password"
+                                    class="password-input"
+                                    placeholder="Create a password"
+                                    required
+                                >
+
+                                <button
+                                    type="button"
+                                    class="show-password"
+                                    onclick="togglePassword()"
+                                    id="passwordToggle"
+                                >
+                                    Show
+                                </button>
+
+                            </div>
+
+                            <p class="password-help">
+                                Use at least 6 characters.
+                            </p>
+
+                        </div>
+
+
+                        <!-- PHONE -->
+
+                        <div class="form-group">
+
+                            <label for="phone">
+                                Phone Number
+                            </label>
+
+                            <input
+                                type="tel"
+                                id="phone"
+                                placeholder="Enter phone number"
+                            >
+
+                        </div>
+
+
+                        <!-- ADDRESS -->
+
+                        <div class="form-group full-width">
+
+                            <label for="address">
+                                Address
+                                <span class="required">*</span>
+                            </label>
+
+                            <textarea
+                                id="address"
+                                placeholder="Enter your address"
+                                required
+                            ></textarea>
+
+                        </div>
+
+
+                        <!-- ROLE -->
+
+                        <div class="role-box">
+
+                            <div class="form-group"
+                                 style="margin-bottom: 0;">
+
+                                <label for="role">
+                                    Account Type
+                                    <span class="required">*</span>
+                                </label>
+
+                                <select
+                                    id="role"
+                                    required
+                                    onchange="handleRoleChange()"
+                                >
+
+                                    <option value="">
+                                        Select account type
+                                    </option>
+
+                                    <option value="donor">
+                                        Donor
+                                    </option>
+
+                                    <option value="ngo">
+                                        NGO
+                                    </option>
+
+                                </select>
+
+                                <p class="role-help">
+                                    Select Donor if you want to
+                                    contribute surplus food.
+                                    Select NGO if your organization
+                                    collects and redistributes food.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- =====================================
+                             NGO INFORMATION
+                        ====================================== -->
+
+                        <div id="ngoFields">
+
+                            <div class="ngo-title">
+                                NGO Information
+                            </div>
+
+
+                            <div class="form-grid">
+
+
+                                <!-- ORGANIZATION -->
+
+                                <div class="form-group">
+
+                                    <label for="organization_name">
+                                        Organization Name
+                                    </label>
+
+                                    <input
+                                        type="text"
+                                        id="organization_name"
+                                        placeholder="Enter organization name"
+                                    >
+
+                                </div>
+
+
+                                <!-- REGISTRATION NUMBER -->
+
+                                <div class="form-group">
+
+                                    <label for="registration_number">
+                                        Registration Number
+                                    </label>
+
+                                    <input
+                                        type="text"
+                                        id="registration_number"
+                                        placeholder="Enter registration number"
+                                    >
+
+                                </div>
+
+
+                                <!-- SERVICE AREA -->
+
+                                <div class="form-group">
+
+                                    <label for="service_area">
+                                        Service Area
+                                    </label>
+
+                                    <input
+                                        type="text"
+                                        id="service_area"
+                                        placeholder="Example: Kochi"
+                                    >
+
+                                </div>
+
+
+                                <!-- LATITUDE -->
+
+                                <div class="form-group">
+
+                                    <label for="latitude">
+                                        Latitude
+                                    </label>
+
+                                    <input
+                                        type="number"
+                                        step="any"
+                                        id="latitude"
+                                        placeholder="Optional"
+                                    >
+
+                                </div>
+
+
+                                <!-- LONGITUDE -->
+
+                                <div class="form-group full-width">
+
+                                    <label for="longitude">
+                                        Longitude
+                                    </label>
+
+                                    <input
+                                        type="number"
+                                        step="any"
+                                        id="longitude"
+                                        placeholder="Optional"
+                                    >
+
+                                </div>
+
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+
+                    <!-- =========================================
+                         SUBMIT
+                    ========================================== -->
+
+                    <div class="submit-section">
+
+                        <button
+                            type="submit"
+                            class="register-btn"
+                            id="registerButton"
+                        >
+                            Create Account
+                        </button>
+
+
+                        <div id="message"></div>
+
+
+                        <p class="login-link">
+
+                            Already have an account?
+
+                            <a
+                                href="/frontend/login.html"
+                            >
+                                Login here
+                            </a>
+
+                        </p>
+
+                    </div>
+
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         FOOTER
+    ===================================================== -->
+
+    <footer>
+
+        <div class="footer-bottom">
+
+            © 2026 RescueMeal.
+            All Rights Reserved.
+
+        </div>
+
+    </footer>
+
+
+
+    <!-- =====================================================
+         JAVASCRIPT
+    ===================================================== -->
+
+    <script>
+
+        /* =====================================================
+           ROLE CHANGE
+        ===================================================== */
+
+        function handleRoleChange() {
+
+            const role =
+                document.getElementById("role").value;
+
+            const ngoFields =
+                document.getElementById("ngoFields");
+
+
+            if (role === "ngo") {
+
+                ngoFields.style.display = "block";
+
+            }
+
+            else {
+
+                ngoFields.style.display = "none";
+
+            }
+
+        }
+
+
+        /* =====================================================
+           PASSWORD SHOW / HIDE
+        ===================================================== */
+
+        function togglePassword() {
+
+            const password =
+                document.getElementById("password");
+
+            const toggle =
+                document.getElementById("passwordToggle");
+
+
+            if (password.type === "password") {
+
+                password.type = "text";
+
+                toggle.textContent = "Hide";
+
+            }
+
+            else {
+
+                password.type = "password";
+
+                toggle.textContent = "Show";
+
+            }
+
+        }
+
+
+        /* =====================================================
+           REGISTER
+        ===================================================== */
+
+        document
+            .getElementById("registerForm")
+            .addEventListener(
+                "submit",
+                async function(event) {
+
+                    event.preventDefault();
+
+
+                    const message =
+                        document.getElementById(
+                            "message"
+                        );
+
+                    const button =
+                        document.getElementById(
+                            "registerButton"
+                        );
+
+
+                    message.textContent =
+                        "";
+
+                    message.className = "";
+
+
+                    const name =
+                        document
+                        .getElementById("name")
+                        .value
+                        .trim();
+
+
+                    const email =
+                        document
+                        .getElementById("email")
+                        .value
+                        .trim();
+
+
+                    const password =
+                        document
+                        .getElementById("password")
+                        .value;
+
+
+                    const phone =
+                        document
+                        .getElementById("phone")
+                        .value
+                        .trim();
+
+
+                    const address =
+                        document
+                        .getElementById("address")
+                        .value
+                        .trim();
+
+
+                    const role =
+                        document
+                        .getElementById("role")
+                        .value;
+
+
+                    const organizationName =
+                        document
+                        .getElementById(
+                            "organization_name"
+                        )
+                        .value
+                        .trim();
+
+
+                    const registrationNumber =
+                        document
+                        .getElementById(
+                            "registration_number"
+                        )
+                        .value
+                        .trim();
+
+
+                    const serviceArea =
+                        document
+                        .getElementById(
+                            "service_area"
+                        )
+                        .value
+                        .trim();
+
+
+                    const latitude =
+                        document
+                        .getElementById(
+                            "latitude"
+                        )
+                        .value
+                        .trim();
+
+
+                    const longitude =
+                        document
+                        .getElementById(
+                            "longitude"
+                        )
+                        .value
+                        .trim();
+
+
+                    /* BASIC VALIDATION */
+
+                    if (password.length < 6) {
+
+                        message.textContent =
+                            "Password must contain at least 6 characters.";
+
+                        message.className =
+                            "error-message";
+
+                        return;
+
+                    }
+
+
+                    if (!role) {
+
+                        message.textContent =
+                            "Please select an account type.";
+
+                        message.className =
+                            "error-message";
+
+                        return;
+
+                    }
+
+
+                    /* BUTTON */
+
+                    button.disabled = true;
+
+                    button.textContent =
+                        "Creating Account...";
+
+
+                    try {
+
+
+                        /* =====================================
+                           REQUEST DATA
+                        ====================================== */
+
+                        const requestData = {
+
+                            name: name,
+
+                            email: email,
+
+                            password: password,
+
+                            phone: phone,
+
+                            address: address,
+
+                            role: role
+
+                        };
+
+
+                        /* NGO DETAILS */
+
+                        if (role === "ngo") {
+
+                            requestData.organization_name =
+                                organizationName;
+
+                            requestData.registration_number =
+                                registrationNumber;
+
+                            requestData.service_area =
+                                serviceArea;
+
+                            requestData.latitude =
+                                latitude
+                                    ? parseFloat(latitude)
+                                    : null;
+
+                            requestData.longitude =
+                                longitude
+                                    ? parseFloat(longitude)
+                                    : null;
+
+                        }
+
+
+                        /* =====================================
+                           API REQUEST
+                        ====================================== */
+
+                        const response =
+                            await fetch(
+                                "/api/register",
+                                {
+
+                                    method: "POST",
+
+                                    headers: {
+                                        "Content-Type":
+                                            "application/json"
+                                    },
+
+                                    body:
+                                        JSON.stringify(
+                                            requestData
+                                        )
+
+                                }
+                            );
+
+
+                        const data =
+                            await response.json();
+
+
+                        /* =====================================
+                           SUCCESS
+                        ====================================== */
+
+                        if (
+                            response.ok &&
+                            data.success
+                        ) {
+
+                            message.textContent =
+                                "Registration successful! Redirecting to login...";
+
+                            message.className =
+                                "success-message";
+
+
+                            document
+                                .getElementById(
+                                    "registerForm"
+                                )
+                                .reset();
+
+
+                            document
+                                .getElementById(
+                                    "ngoFields"
+                                )
+                                .style.display =
+                                "none";
+
+
+                            setTimeout(
+                                function() {
+
+                                    window.location.href =
+                                        "/frontend/login.html";
+
+                                },
+                                1200
+                            );
+
+                        }
+
+
+                        /* =====================================
+                           ERROR
+                        ====================================== */
+
+                        else {
+
+                            message.textContent =
+                                data.message ||
+                                "Registration failed.";
+
+                            message.className =
+                                "error-message";
+
+                        }
+
+                    }
+
+
+                    catch (error) {
+
+                        console.error(
+                            "Registration Error:",
+                            error
+                        );
+
+
+                        message.textContent =
+                            "Unable to connect to the server.";
+
+                        message.className =
+                            "error-message";
+
+                    }
+
+
+                    finally {
+
+                        button.disabled = false;
+
+                        button.textContent =
+                            "Create Account";
+
+                    }
+
+                }
+            );
+
+    </script>
+
+</body>
+
+</html>

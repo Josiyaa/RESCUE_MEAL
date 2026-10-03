@@ -1,0 +1,1905 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>RescueMeal - Surplus Food Redistribution</title>
+
+    <link rel="icon"
+          type="image/png"
+          href="/frontend/favicon.png">
+
+    <style>
+
+        /* =====================================================
+           RESET
+        ===================================================== */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            color: #26332c;
+
+            background: #f5f8f6;
+
+            line-height: 1.6;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+
+        /* =====================================================
+           HEADER
+        ===================================================== */
+
+        header {
+            position: sticky;
+
+            top: 0;
+
+            z-index: 1000;
+
+            background:
+                rgba(255, 255, 255, 0.97);
+
+            backdrop-filter: blur(10px);
+
+            border-bottom:
+                1px solid #e2e9e4;
+
+            box-shadow:
+                0 3px 15px
+                rgba(0, 0, 0, 0.05);
+        }
+
+        .navbar {
+            width: min(92%, 1200px);
+
+            min-height: 76px;
+
+            margin: auto;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+        }
+
+
+        /* =====================================================
+           LOGO
+        ===================================================== */
+
+        .logo {
+            display: flex;
+
+            align-items: center;
+
+            gap: 9px;
+
+            color: #1f7048;
+
+            font-size: 27px;
+
+            font-weight: 800;
+        }
+
+        .logo-icon {
+            width: 33px;
+            height: 33px;
+
+            object-fit: contain;
+        }
+
+
+        /* =====================================================
+           NAVIGATION
+        ===================================================== */
+
+        nav {
+            display: flex;
+
+            align-items: center;
+
+            gap: 28px;
+        }
+
+        nav a {
+            position: relative;
+
+            color: #37433c;
+
+            font-size: 15px;
+
+            font-weight: 600;
+
+            transition: 0.25s;
+        }
+
+        nav a::after {
+            content: "";
+
+            position: absolute;
+
+            left: 0;
+
+            bottom: -8px;
+
+            width: 0;
+
+            height: 2px;
+
+            background: #f28a2e;
+
+            transition: 0.25s;
+        }
+
+        nav a:hover {
+            color: #1f7048;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        .nav-register {
+            padding:
+                9px 16px;
+
+            border-radius: 8px;
+
+            background: #1f7048;
+
+            color: white !important;
+        }
+
+        .nav-register:hover {
+            background: #155437;
+        }
+
+        .nav-register::after {
+            display: none;
+        }
+
+
+        /* =====================================================
+           HERO
+        ===================================================== */
+
+        .hero {
+            position: relative;
+
+            overflow: hidden;
+
+            padding:
+                105px 20px
+                95px;
+
+            background:
+                radial-gradient(
+                    circle at 10% 15%,
+                    rgba(242,138,46,0.12),
+                    transparent 23%
+                ),
+
+                radial-gradient(
+                    circle at 90% 15%,
+                    rgba(31,112,72,0.12),
+                    transparent 25%
+                ),
+
+                linear-gradient(
+                    135deg,
+                    #edf8f1,
+                    #ffffff
+                );
+        }
+
+        .hero::before {
+            content: "";
+
+            position: absolute;
+
+            width: 330px;
+            height: 330px;
+
+            border-radius: 50%;
+
+            background:
+                rgba(31,112,72,0.07);
+
+            right: -140px;
+
+            bottom: -160px;
+        }
+
+        .hero-container {
+            position: relative;
+
+            z-index: 1;
+
+            width: min(92%, 1080px);
+
+            margin: auto;
+
+            text-align: center;
+        }
+
+        .hero-logo {
+            width: 68px;
+            height: 68px;
+
+            object-fit: contain;
+
+            margin:
+                0 auto 18px;
+        }
+
+        .hero-badge {
+            display: inline-block;
+
+            padding:
+                7px 15px;
+
+            margin-bottom: 20px;
+
+            border-radius: 30px;
+
+            background: #e3f4e9;
+
+            color: #1f7048;
+
+            border:
+                1px solid #d1e8d9;
+
+            font-size: 13px;
+
+            font-weight: bold;
+        }
+
+        .hero h1 {
+            max-width: 900px;
+
+            margin:
+                0 auto 20px;
+
+            color: #155437;
+
+            font-size:
+                clamp(40px, 6vw, 66px);
+
+            line-height: 1.05;
+
+            letter-spacing: -2px;
+        }
+
+        .hero h1 span {
+            color: #f28a2e;
+        }
+
+        .hero-description {
+            max-width: 720px;
+
+            margin:
+                0 auto 32px;
+
+            color: #66736b;
+
+            font-size: 17px;
+        }
+
+        .hero-buttons {
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            flex-wrap: wrap;
+
+            gap: 14px;
+        }
+
+        .btn {
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            padding:
+                13px 23px;
+
+            border-radius: 9px;
+
+            font-weight: bold;
+
+            font-size: 14px;
+
+            transition: 0.25s;
+        }
+
+        .btn-primary {
+            background: #1f7048;
+
+            color: white;
+
+            box-shadow:
+                0 8px 18px
+                rgba(31,112,72,0.18);
+        }
+
+        .btn-primary:hover {
+            background: #155437;
+
+            transform:
+                translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: white;
+
+            color: #1f7048;
+
+            border:
+                1px solid #d6e2da;
+        }
+
+        .btn-secondary:hover {
+            background: #f2f8f4;
+
+            border-color:
+                #1f7048;
+
+            transform:
+                translateY(-2px);
+        }
+
+
+        /* =====================================================
+           GENERAL SECTION
+        ===================================================== */
+
+        .section {
+            padding:
+                80px 20px;
+        }
+
+        .container {
+            width: min(92%, 1100px);
+
+            margin: auto;
+        }
+
+        .section-heading {
+            text-align: center;
+
+            max-width: 720px;
+
+            margin:
+                0 auto 45px;
+        }
+
+        .section-heading h2 {
+            color: #155437;
+
+            font-size: 33px;
+
+            margin-bottom: 10px;
+        }
+
+        .section-heading p {
+            color: #6a766e;
+
+            font-size: 15px;
+        }
+
+
+        /* =====================================================
+           PROBLEM SECTION
+        ===================================================== */
+
+        .problem-section {
+            background: white;
+        }
+
+        .problem-grid {
+            display: grid;
+
+            grid-template-columns:
+                1fr
+                1fr;
+
+            gap: 25px;
+        }
+
+        .problem-card {
+            padding: 32px;
+
+            border-radius: 20px;
+
+            border:
+                1px solid #e0e8e3;
+
+            background: #fbfdfb;
+        }
+
+        .problem-card:first-child {
+            border-top:
+                4px solid #f28a2e;
+        }
+
+        .problem-card:last-child {
+            border-top:
+                4px solid #1f7048;
+        }
+
+        .problem-icon {
+            width: 55px;
+            height: 55px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            margin-bottom: 17px;
+
+            border-radius: 15px;
+
+            background: #fff1df;
+
+            font-size: 25px;
+        }
+
+        .problem-card:last-child
+        .problem-icon {
+            background: #e7f7ed;
+        }
+
+        .problem-card h3 {
+            color: #155437;
+
+            font-size: 21px;
+
+            margin-bottom: 9px;
+        }
+
+        .problem-card p {
+            color: #657169;
+
+            font-size: 14px;
+
+            margin-bottom: 14px;
+        }
+
+        .problem-list {
+            padding-left: 19px;
+
+            color: #68746d;
+
+            font-size: 14px;
+        }
+
+        .problem-list li {
+            margin-bottom: 7px;
+        }
+
+
+        /* =====================================================
+           HOW IT WORKS
+        ===================================================== */
+
+        .process-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 22px;
+        }
+
+        .process-card {
+            position: relative;
+
+            padding: 30px 25px;
+
+            background: white;
+
+            border:
+                1px solid #dfe7e2;
+
+            border-radius: 19px;
+
+            text-align: center;
+
+            box-shadow:
+                0 7px 22px
+                rgba(31,112,72,0.06);
+
+            transition: 0.25s;
+        }
+
+        .process-card:hover {
+            transform:
+                translateY(-6px);
+
+            box-shadow:
+                0 14px 32px
+                rgba(31,112,72,0.11);
+        }
+
+        .process-number {
+            position: absolute;
+
+            top: 15px;
+
+            right: 18px;
+
+            color: #cbd7cf;
+
+            font-size: 12px;
+
+            font-weight: bold;
+        }
+
+        .process-icon {
+            width: 65px;
+            height: 65px;
+
+            margin:
+                0 auto 20px;
+
+            border-radius: 18px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            background: #e7f7ed;
+
+            font-size: 29px;
+        }
+
+        .process-card:nth-child(2)
+        .process-icon {
+            background: #fff1df;
+        }
+
+        .process-card:nth-child(3)
+        .process-icon {
+            background: #e7f0fa;
+        }
+
+        .process-card h3 {
+            color: #155437;
+
+            font-size: 19px;
+
+            margin-bottom: 8px;
+        }
+
+        .process-card p {
+            color: #69756d;
+
+            font-size: 14px;
+        }
+
+
+        /* =====================================================
+           USER TYPES
+        ===================================================== */
+
+        .users-section {
+            background: #edf7f0;
+        }
+
+        .users-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 22px;
+        }
+
+        .user-card {
+            background: white;
+
+            padding: 30px 25px;
+
+            border-radius: 19px;
+
+            border:
+                1px solid #dce7df;
+
+            text-align: center;
+
+            transition: 0.25s;
+        }
+
+        .user-card:hover {
+            transform:
+                translateY(-5px);
+
+            box-shadow:
+                0 12px 30px
+                rgba(31,112,72,0.10);
+        }
+
+        .user-icon {
+            width: 64px;
+            height: 64px;
+
+            margin:
+                0 auto 17px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            background: #e7f7ed;
+
+            border-radius: 17px;
+
+            font-size: 29px;
+        }
+
+        .user-card:nth-child(2)
+        .user-icon {
+            background: #fff1df;
+        }
+
+        .user-card:nth-child(3)
+        .user-icon {
+            background: #e7f0fa;
+        }
+
+        .user-card h3 {
+            color: #155437;
+
+            font-size: 19px;
+
+            margin-bottom: 7px;
+        }
+
+        .user-card p {
+            color: #69756d;
+
+            font-size: 14px;
+        }
+
+
+        /* =====================================================
+           FEATURES
+        ===================================================== */
+
+        .features-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap: 18px;
+        }
+
+        .feature-card {
+            display: flex;
+
+            align-items: flex-start;
+
+            gap: 17px;
+
+            padding: 24px;
+
+            background: white;
+
+            border:
+                1px solid #e1e8e3;
+
+            border-radius: 17px;
+
+            transition: 0.25s;
+        }
+
+        .feature-card:hover {
+            transform:
+                translateY(-3px);
+
+            border-color:
+                #bfd4c6;
+
+            box-shadow:
+                0 8px 22px
+                rgba(31,112,72,0.07);
+        }
+
+        .feature-icon {
+            flex-shrink: 0;
+
+            width: 48px;
+            height: 48px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            border-radius: 13px;
+
+            background: #e7f7ed;
+
+            font-size: 21px;
+        }
+
+        .feature-card:nth-child(even)
+        .feature-icon {
+            background: #fff1df;
+        }
+
+        .feature-card h3 {
+            color: #1f7048;
+
+            font-size: 17px;
+
+            margin-bottom: 5px;
+        }
+
+        .feature-card p {
+            color: #6b766f;
+
+            font-size: 13px;
+        }
+
+
+        /* =====================================================
+           GOAL / IMPACT
+        ===================================================== */
+
+        .goal-section {
+            background:
+                linear-gradient(
+                    135deg,
+                    #155437,
+                    #1f7048
+                );
+
+            color: white;
+        }
+
+        .goal-content {
+            width: min(92%, 950px);
+
+            margin: auto;
+
+            text-align: center;
+        }
+
+        .goal-content h2 {
+            font-size: 34px;
+
+            margin-bottom: 13px;
+        }
+
+        .goal-content > p {
+            max-width: 720px;
+
+            margin:
+                0 auto 35px;
+
+            color:
+                rgba(255,255,255,0.78);
+
+            font-size: 15px;
+        }
+
+        .goal-points {
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 15px;
+        }
+
+        .goal-point {
+            padding: 22px 14px;
+
+            background:
+                rgba(255,255,255,0.09);
+
+            border:
+                1px solid
+                rgba(255,255,255,0.13);
+
+            border-radius: 15px;
+        }
+
+        .goal-point .number {
+            display: block;
+
+            color: white;
+
+            font-size: 25px;
+
+            font-weight: 800;
+
+            margin-bottom: 4px;
+        }
+
+        .goal-point .label {
+            color:
+                rgba(255,255,255,0.70);
+
+            font-size: 12px;
+        }
+
+
+        /* =====================================================
+           CTA
+        ===================================================== */
+
+        .cta-wrapper {
+            padding:
+                0 20px 80px;
+
+            background: #f5f8f6;
+        }
+
+        .cta-box {
+            width: min(92%, 1050px);
+
+            margin: auto;
+
+            padding:
+                58px 30px;
+
+            border-radius: 24px;
+
+            text-align: center;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #fff4e6,
+                    #fffaf5
+                );
+
+            border:
+                1px solid #f1dfcb;
+        }
+
+        .cta-box h2 {
+            color: #155437;
+
+            font-size: 32px;
+
+            margin-bottom: 10px;
+        }
+
+        .cta-box p {
+            max-width: 660px;
+
+            margin:
+                0 auto 25px;
+
+            color: #6a756e;
+
+            font-size: 15px;
+        }
+
+        .cta-button {
+            display: inline-block;
+
+            padding:
+                13px 25px;
+
+            border-radius: 9px;
+
+            background: #1f7048;
+
+            color: white;
+
+            font-weight: bold;
+
+            transition: 0.25s;
+        }
+
+        .cta-button:hover {
+            background: #155437;
+
+            transform:
+                translateY(-2px);
+        }
+
+
+        /* =====================================================
+           FOOTER
+        ===================================================== */
+
+        footer {
+            background: #123d29;
+
+            color: white;
+
+            padding:
+                48px 20px
+                22px;
+        }
+
+        .footer-container {
+            width: min(92%, 1100px);
+
+            margin: auto;
+        }
+
+        .footer-grid {
+            display: grid;
+
+            grid-template-columns:
+                2fr
+                1fr
+                1fr;
+
+            gap: 40px;
+
+            padding-bottom: 30px;
+
+            border-bottom:
+                1px solid
+                rgba(255,255,255,0.12);
+        }
+
+        .footer-brand {
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            margin-bottom: 12px;
+
+            font-size: 22px;
+
+            font-weight: bold;
+        }
+
+        .footer-brand img {
+            width: 29px;
+            height: 29px;
+        }
+
+        footer h3 {
+            font-size: 15px;
+
+            margin-bottom: 13px;
+        }
+
+        footer p,
+        footer a {
+            color:
+                rgba(255,255,255,0.68);
+
+            font-size: 13px;
+        }
+
+        footer p {
+            max-width: 430px;
+
+            line-height: 1.8;
+        }
+
+        footer a {
+            display: block;
+
+            margin-bottom: 7px;
+        }
+
+        footer a:hover {
+            color: white;
+        }
+
+        .footer-bottom {
+            text-align: center;
+
+            padding-top: 20px;
+
+            color:
+                rgba(255,255,255,0.52);
+
+            font-size: 12px;
+        }
+
+
+        /* =====================================================
+           RESPONSIVE
+        ===================================================== */
+
+        @media (max-width: 900px) {
+
+            .problem-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .process-grid,
+            .users-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .goal-points {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-grid {
+                grid-template-columns:
+                    1fr 1fr;
+            }
+        }
+
+
+        @media (max-width: 650px) {
+
+            .navbar {
+                flex-direction: column;
+
+                padding:
+                    15px 0;
+
+                gap: 13px;
+            }
+
+            nav {
+                gap: 15px;
+
+                flex-wrap: wrap;
+
+                justify-content: center;
+            }
+
+            .hero {
+                padding:
+                    75px 20px
+                    70px;
+            }
+
+            .hero h1 {
+                letter-spacing: -1px;
+            }
+
+            .section {
+                padding:
+                    60px 20px;
+            }
+
+            .goal-points {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .cta-box {
+                padding:
+                    42px 22px;
+            }
+        }
+
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- =====================================================
+         HEADER
+    ===================================================== -->
+
+    <header>
+
+        <div class="navbar">
+
+            <a
+                href="/frontend/index.html"
+                class="logo"
+            >
+
+                <img
+                    src="/frontend/favicon.png"
+                    alt="RescueMeal Logo"
+                    class="logo-icon"
+                >
+
+                <span>
+                    RescueMeal
+                </span>
+
+            </a>
+
+
+            <nav>
+
+                <a href="/frontend/index.html">
+                    Home
+                </a>
+
+                <a href="/frontend/about.html">
+                    About
+                </a>
+
+                <a href="/frontend/login.html">
+                    Login
+                </a>
+
+                <a
+                    href="/frontend/register.html"
+                    class="nav-register"
+                >
+                    Register
+                </a>
+
+            </nav>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- =====================================================
+         HERO
+    ===================================================== -->
+
+    <section class="hero">
+
+        <div class="hero-container">
+
+            <img
+                src="/frontend/favicon.png"
+                alt="RescueMeal Logo"
+                class="hero-logo"
+            >
+
+            <div class="hero-badge">
+                Smart Surplus Food Redistribution
+            </div>
+
+            <h1>
+                Rescue Food.
+                <span>Reduce Waste.</span>
+                Feed Communities.
+            </h1>
+
+            <p class="hero-description">
+                RescueMeal connects people and organizations
+                with surplus food to NGOs that can collect and
+                redistribute it to communities in need.
+            </p>
+
+            <div class="hero-buttons">
+
+                <a
+                    href="/frontend/register.html"
+                    class="btn btn-primary"
+                >
+                    Donate Food
+                </a>
+
+                <a
+                    href="/frontend/login.html"
+                    class="btn btn-secondary"
+                >
+                    Find Food
+                </a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         PROBLEM / SOLUTION
+    ===================================================== -->
+
+    <section class="section problem-section">
+
+        <div class="container">
+
+            <div class="section-heading">
+
+                <h2>
+                    Why RescueMeal?
+                </h2>
+
+                <p>
+                    Turning surplus food into a useful community
+                    resource through a simple digital platform.
+                </p>
+
+            </div>
+
+
+            <div class="problem-grid">
+
+
+                <div class="problem-card">
+
+                    <div class="problem-icon">
+                        ⚠️
+                    </div>
+
+                    <h3>
+                        The Problem
+                    </h3>
+
+                    <p>
+                        Usable food can be wasted because donors
+                        and organizations that need food are not
+                        always connected in time.
+                    </p>
+
+                    <ul class="problem-list">
+
+                        <li>
+                            Surplus food may be discarded.
+                        </li>
+
+                        <li>
+                            Manual coordination can be slow.
+                        </li>
+
+                        <li>
+                            Food may expire before collection.
+                        </li>
+
+                    </ul>
+
+                </div>
+
+
+                <div class="problem-card">
+
+                    <div class="problem-icon">
+                        💡
+                    </div>
+
+                    <h3>
+                        Our Solution
+                    </h3>
+
+                    <p>
+                        RescueMeal provides a centralized platform
+                        for managing the complete surplus food
+                        redistribution process.
+                    </p>
+
+                    <ul class="problem-list">
+
+                        <li>
+                            Donors can list available food.
+                        </li>
+
+                        <li>
+                            NGOs can discover and claim food.
+                        </li>
+
+                        <li>
+                            Donation status can be tracked.
+                        </li>
+
+                    </ul>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         HOW IT WORKS
+    ===================================================== -->
+
+    <section class="section">
+
+        <div class="container">
+
+            <div class="section-heading">
+
+                <h2>
+                    How RescueMeal Works
+                </h2>
+
+                <p>
+                    A simple three-step process from surplus food
+                    to collection.
+                </p>
+
+            </div>
+
+
+            <div class="process-grid">
+
+
+                <div class="process-card">
+
+                    <span class="process-number">
+                        STEP 01
+                    </span>
+
+                    <div class="process-icon">
+                        🍲
+                    </div>
+
+                    <h3>
+                        Donate Food
+                    </h3>
+
+                    <p>
+                        Donors add details such as food name,
+                        quantity, type, expiry time and pickup
+                        address.
+                    </p>
+
+                </div>
+
+
+                <div class="process-card">
+
+                    <span class="process-number">
+                        STEP 02
+                    </span>
+
+                    <div class="process-icon">
+                        🤝
+                    </div>
+
+                    <h3>
+                        NGO Claims
+                    </h3>
+
+                    <p>
+                        NGOs can view available donations and
+                        claim food suitable for their needs.
+                    </p>
+
+                </div>
+
+
+                <div class="process-card">
+
+                    <span class="process-number">
+                        STEP 03
+                    </span>
+
+                    <div class="process-icon">
+                        ✅
+                    </div>
+
+                    <h3>
+                        Food Collected
+                    </h3>
+
+                    <p>
+                        After pickup, the donation is marked as
+                        collected and the system updates its status.
+                    </p>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         WHO CAN USE RESCUEMEAL
+    ===================================================== -->
+
+    <section class="section users-section">
+
+        <div class="container">
+
+            <div class="section-heading">
+
+                <h2>
+                    Who Can Use RescueMeal?
+                </h2>
+
+                <p>
+                    The platform provides separate functions
+                    for each type of user.
+                </p>
+
+            </div>
+
+
+            <div class="users-grid">
+
+
+                <div class="user-card">
+
+                    <div class="user-icon">
+                        👤
+                    </div>
+
+                    <h3>
+                        Donors
+                    </h3>
+
+                    <p>
+                        Individuals, restaurants and organizations
+                        can share their surplus food.
+                    </p>
+
+                </div>
+
+
+                <div class="user-card">
+
+                    <div class="user-icon">
+                        🏢
+                    </div>
+
+                    <h3>
+                        NGOs
+                    </h3>
+
+                    <p>
+                        NGOs can find suitable food donations,
+                        claim them and manage collection.
+                    </p>
+
+                </div>
+
+
+                <div class="user-card">
+
+                    <div class="user-icon">
+                        🛡️
+                    </div>
+
+                    <h3>
+                        Administrators
+                    </h3>
+
+                    <p>
+                        Administrators can monitor users, NGOs,
+                        donations and system statistics.
+                    </p>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         KEY FEATURES
+    ===================================================== -->
+
+    <section class="section">
+
+        <div class="container">
+
+            <div class="section-heading">
+
+                <h2>
+                    Key Features
+                </h2>
+
+                <p>
+                    Core functions included in the RescueMeal
+                    platform.
+                </p>
+
+            </div>
+
+
+            <div class="features-grid">
+
+
+                <div class="feature-card">
+
+                    <div class="feature-icon">
+                        👤
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Donor Dashboard
+                        </h3>
+
+                        <p>
+                            Add food donations and view the history
+                            and current status of submitted food.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="feature-card">
+
+                    <div class="feature-icon">
+                        🏢
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            NGO Dashboard
+                        </h3>
+
+                        <p>
+                            Browse available donations and manage
+                            claimed and collected food.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="feature-card">
+
+                    <div class="feature-icon">
+                        📦
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Donation Management
+                        </h3>
+
+                        <p>
+                            Store food details including quantity,
+                            type, expiry time and pickup address.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="feature-card">
+
+                    <div class="feature-icon">
+                        🔄
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Status Tracking
+                        </h3>
+
+                        <p>
+                            Track donations from Available to
+                            Claimed and finally Collected.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="feature-card">
+
+                    <div class="feature-icon">
+                        🤖
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            AI Demand Prediction
+                        </h3>
+
+                        <p>
+                            The project provides a foundation for
+                            machine-learning-based food demand
+                            prediction.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="feature-card">
+
+                    <div class="feature-icon">
+                        ⏱️
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Expiry Awareness
+                        </h3>
+
+                        <p>
+                            Preparation and expiry information helps
+                            support timely food collection.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         GOAL
+    ===================================================== -->
+
+    <section class="section goal-section">
+
+        <div class="goal-content">
+
+            <h2>
+                Our Goal
+            </h2>
+
+            <p>
+                RescueMeal aims to make surplus food redistribution
+                more organized by bringing donors, NGOs and
+                administrators together on one platform.
+            </p>
+
+
+            <div class="goal-points">
+
+
+                <div class="goal-point">
+
+                    <span class="number">
+                        01
+                    </span>
+
+                    <span class="label">
+                        Reduce Food Waste
+                    </span>
+
+                </div>
+
+
+                <div class="goal-point">
+
+                    <span class="number">
+                        02
+                    </span>
+
+                    <span class="label">
+                        Connect Donors
+                    </span>
+
+                </div>
+
+
+                <div class="goal-point">
+
+                    <span class="number">
+                        03
+                    </span>
+
+                    <span class="label">
+                        Support NGOs
+                    </span>
+
+                </div>
+
+
+                <div class="goal-point">
+
+                    <span class="number">
+                        04
+                    </span>
+
+                    <span class="label">
+                        Improve Distribution
+                    </span>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         CALL TO ACTION
+    ===================================================== -->
+
+    <div class="cta-wrapper">
+
+        <div class="cta-box">
+
+            <h2>
+                Have Surplus Food?
+            </h2>
+
+            <p>
+                Give your extra food a purpose. Register with
+                RescueMeal and connect with organizations that
+                can redistribute it.
+            </p>
+
+            <a
+                href="/frontend/register.html"
+                class="cta-button"
+            >
+                Get Started
+            </a>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         FOOTER
+    ===================================================== -->
+
+    <footer>
+
+        <div class="footer-container">
+
+            <div class="footer-grid">
+
+
+                <div>
+
+                    <div class="footer-brand">
+
+                        <img
+                            src="/frontend/favicon.png"
+                            alt="RescueMeal"
+                        >
+
+                        <span>
+                            RescueMeal
+                        </span>
+
+                    </div>
+
+                    <p>
+                        A surplus food redistribution platform
+                        connecting donors with NGOs to help
+                        reduce unnecessary food wastage.
+                    </p>
+
+                </div>
+
+
+                <div>
+
+                    <h3>
+                        Quick Links
+                    </h3>
+
+                    <a href="/frontend/index.html">
+                        Home
+                    </a>
+
+                    <a href="/frontend/about.html">
+                        About
+                    </a>
+
+                    <a href="/frontend/login.html">
+                        Login
+                    </a>
+
+                    <a href="/frontend/register.html">
+                        Register
+                    </a>
+
+                </div>
+
+
+                <div>
+
+                    <h3>
+                        Platform
+                    </h3>
+
+                    <a href="/frontend/login.html">
+                        Donor
+                    </a>
+
+                    <a href="/frontend/login.html">
+                        NGO
+                    </a>
+
+                    <a href="/frontend/login.html">
+                        Admin
+                    </a>
+
+                </div>
+
+
+            </div>
+
+
+            <div class="footer-bottom">
+
+                © 2026 RescueMeal.
+                All Rights Reserved.
+
+            </div>
+
+        </div>
+
+    </footer>
+
+
+</body>
+
+</html>

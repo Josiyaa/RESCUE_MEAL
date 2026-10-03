@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Login - RescueMeal</title>
+
+    <link rel="icon" type="image/png" href="/frontend/favicon.png">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f8f5;
+            color: #222;
+        }
+
+        /* HEADER */
+
+        header {
+            background: white;
+            height: 75px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 0 8%;
+
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+
+            color: #1f7048;
+
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .logo-icon {
+            width: 30px;
+            height: 30px;
+            object-fit: contain;
+        }
+
+        nav {
+            display: flex;
+            gap: 25px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #333;
+            font-size: 15px;
+        }
+
+        nav a:hover {
+            color: #1f7048;
+        }
+
+        /* LOGIN SECTION */
+
+        .login-section {
+            min-height: calc(100vh - 75px);
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 40px 20px;
+        }
+
+        .login-box {
+            width: 100%;
+            max-width: 420px;
+
+            background: white;
+
+            padding: 38px;
+
+            border-radius: 16px;
+
+            box-shadow:
+                0 8px 30px rgba(0,0,0,0.10);
+        }
+
+        .login-box h1 {
+            text-align: center;
+
+            color: #1f7048;
+
+            margin-bottom: 8px;
+
+            font-size: 30px;
+        }
+
+        .login-box .subtitle {
+            text-align: center;
+
+            color: #777;
+
+            margin-bottom: 28px;
+
+            font-size: 14px;
+        }
+
+        /* FORM */
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+
+            margin-bottom: 7px;
+
+            font-weight: bold;
+
+            color: #333;
+
+            font-size: 14px;
+        }
+
+        .form-group input {
+            width: 100%;
+
+            padding: 12px 13px;
+
+            border: 1px solid #ccc;
+
+            border-radius: 8px;
+
+            font-size: 15px;
+
+            outline: none;
+        }
+
+        .form-group input:focus {
+            border-color: #1f7048;
+
+            box-shadow:
+                0 0 0 3px rgba(31,112,72,0.10);
+        }
+
+        /* LOGIN BUTTON */
+
+        .login-btn {
+            width: 100%;
+
+            padding: 13px;
+
+            background: #1f7048;
+
+            color: white;
+
+            border: none;
+
+            border-radius: 8px;
+
+            font-size: 16px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+        }
+
+        .login-btn:hover {
+            background: #155437;
+        }
+
+        /* MESSAGE */
+
+        #message {
+            margin-top: 15px;
+
+            text-align: center;
+
+            font-size: 14px;
+
+            min-height: 20px;
+        }
+
+        .error {
+            color: #c0392b;
+        }
+
+        .success {
+            color: #2e8b57;
+        }
+
+        /* REGISTER LINK */
+
+        .register-text {
+            text-align: center;
+
+            margin-top: 22px;
+
+            color: #666;
+
+            font-size: 14px;
+        }
+
+        .register-text a {
+            color: #1f7048;
+
+            font-weight: bold;
+
+            text-decoration: none;
+        }
+
+        .register-text a:hover {
+            text-decoration: underline;
+        }
+
+        /* RESPONSIVE */
+
+        @media (max-width: 600px) {
+
+            header {
+                padding: 0 5%;
+            }
+
+            .logo {
+                font-size: 23px;
+            }
+
+            nav {
+                gap: 12px;
+            }
+
+            .login-box {
+                padding: 28px 22px;
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <!-- HEADER -->
+
+    <header>
+
+        <div class="logo">
+
+            <img
+                src="/frontend/favicon.png"
+                alt="RescueMeal Logo"
+                class="logo-icon"
+            >
+
+            <span>RescueMeal</span>
+
+        </div>
+
+        <nav>
+
+            <a href="/frontend/index.html">
+                Home
+            </a>
+
+            <a href="/frontend/about.html">
+                About
+            </a>
+
+            <a href="/frontend/register.html">
+                Register
+            </a>
+
+        </nav>
+
+    </header>
+
+
+    <!-- LOGIN -->
+
+    <section class="login-section">
+
+        <div class="login-box">
+
+            <h1>Login</h1>
+
+            <p class="subtitle">
+                Login to your RescueMeal account
+            </p>
+
+
+            <form id="loginForm">
+
+                <div class="form-group">
+
+                    <label for="email">
+                        Email
+                    </label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        placeholder="Enter your email"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="password">
+                        Password
+                    </label>
+
+                    <input
+                        type="password"
+                        id="password"
+                        placeholder="Enter your password"
+                        required
+                    >
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="login-btn"
+                >
+                    Login
+                </button>
+
+            </form>
+
+
+            <div id="message"></div>
+
+
+            <p class="register-text">
+
+                Don't have an account?
+
+                <a href="/frontend/register.html">
+                    Register here
+                </a>
+
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <script>
+
+        document
+            .getElementById("loginForm")
+            .addEventListener("submit", async function(event) {
+
+                event.preventDefault();
+
+
+                const email =
+                    document.getElementById("email").value.trim();
+
+                const password =
+                    document.getElementById("password").value;
+
+
+                const message =
+                    document.getElementById("message");
+
+
+                message.textContent = "Logging in...";
+                message.className = "";
+
+
+                try {
+
+                    const response =
+                        await fetch("/api/login", {
+
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+
+                            body: JSON.stringify({
+                                email: email,
+                                password: password
+                            })
+
+                        });
+
+
+                    const data =
+                        await response.json();
+
+
+                    if (!response.ok || !data.success) {
+
+                        message.textContent =
+                            data.message ||
+                            "Invalid email or password";
+
+                        message.className = "error";
+
+                        return;
+                    }
+
+
+                    /* SAVE USER */
+
+                    localStorage.setItem(
+                        "rescueMealUser",
+                        JSON.stringify(data.user)
+                    );
+
+
+                    /* SAVE TOKEN */
+
+                    if (data.token) {
+
+                        localStorage.setItem(
+                            "rescueMealToken",
+                            data.token
+                        );
+
+                    }
+
+
+                    message.textContent =
+                        "Login successful!";
+
+                    message.className = "success";
+
+
+                    /* ROLE BASED REDIRECT */
+
+                    setTimeout(function() {
+
+                        if (data.user.role === "donor") {
+
+                            window.location.href =
+                                "/frontend/donor-dashboard.html";
+
+                        }
+
+                        else if (data.user.role === "ngo") {
+
+                            window.location.href =
+                                "/frontend/ngo-dashboard.html";
+
+                        }
+
+                        else if (data.user.role === "admin") {
+
+                            window.location.href =
+                                "/frontend/admin-dashboard.html";
+
+                        }
+
+                        else {
+
+                            window.location.href =
+                                "/dashboard";
+
+                        }
+
+                    }, 500);
+
+                }
+
+
+                catch (error) {
+
+                    console.error(
+                        "Login Error:",
+                        error
+                    );
+
+                    message.textContent =
+                        "Unable to connect to the server.";
+
+                    message.className = "error";
+
+                }
+
+            });
+
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>NGO Dashboard - RescueMeal</title>
+
+    <link rel="stylesheet" href="/frontend/style.css">
+</head>
+
+<body>
+
+    <!-- HEADER -->
+
+    <header>
+
+        <div class="logo">
+            RescueMeal
+        </div>
+
+        <nav>
+            <a href="/dashboard">Home</a>
+            <a href="#" onclick="logout()">Logout</a>
+        </nav>
+
+    </header>
+
+
+    <!-- MAIN -->
+
+    <main>
+
+        <section class="dashboard">
+
+            <h1>NGO Dashboard</h1>
+
+            <p id="welcomeMessage"></p>
+
+
+            <!-- AVAILABLE FOOD -->
+
+            <div class="dashboard-card">
+
+                <h2>Available Food Donations</h2>
+
+                <p>
+                    Find surplus food donations and claim
+                    them for your community.
+                </p>
+
+                <button onclick="loadDonations()">
+                    Refresh Donations
+                </button>
+
+            </div>
+
+
+            <!-- CLAIMED FOOD -->
+
+            <div class="dashboard-card">
+
+                <h2>My Claimed Donations</h2>
+
+                <p>
+                    Food donations that you have claimed
+                    will appear here.
+                </p>
+
+                <button onclick="loadClaimedDonations()">
+                    View My Claims
+                </button>
+
+            </div>
+
+
+            <!-- DONATIONS -->
+
+            <div id="donationsContainer">
+
+                <div class="dashboard-card">
+
+                    <p>
+                        Loading donations...
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- CLAIMED DONATIONS -->
+
+            <div id="claimedContainer">
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- FOOTER -->
+
+    <footer>
+
+        <p>
+            © 2026 RescueMeal. All Rights Reserved.
+        </p>
+
+    </footer>
+
+
+    <script>
+
+        // =====================================================
+        // CHECK LOGIN
+        // =====================================================
+
+        const userData =
+            localStorage.getItem("rescueMealUser");
+
+
+        if (!userData) {
+
+            window.location.href =
+                "/frontend/login.html";
+
+        }
+
+
+        const user =
+            JSON.parse(userData);
+
+
+        // Only NGO users can access this page
+
+        if (user.role !== "ngo") {
+
+            alert(
+                "Only NGO users can access this dashboard."
+            );
+
+            window.location.href =
+                "/dashboard";
+
+        }
+
+
+        // =====================================================
+        // NGO ID
+        // =====================================================
+
+        // Your current database:
+        //
+        // ngos
+        // id = 1
+        // user_id = 2
+        //
+        // Therefore:
+        // ngo_id = 1
+
+        const ngoId = 1;
+
+
+        // =====================================================
+        // WELCOME MESSAGE
+        // =====================================================
+
+        document.getElementById(
+            "welcomeMessage"
+        ).innerText =
+            "Welcome, " + user.name + "!";
+
+
+        // =====================================================
+        // LOAD AVAILABLE DONATIONS
+        // =====================================================
+
+        async function loadDonations() {
+
+            const container =
+                document.getElementById(
+                    "donationsContainer"
+                );
+
+
+            container.innerHTML = `
+                <div class="dashboard-card">
+                    <p>Loading available donations...</p>
+                </div>
+            `;
+
+
+            try {
+
+                const response =
+                    await fetch("/api/donations");
+
+
+                const data =
+                    await response.json();
+
+
+                if (!data.success) {
+
+                    container.innerHTML = `
+                        <div class="dashboard-card">
+                            <p style="color:red;">
+                                ${data.message}
+                            </p>
+                        </div>
+                    `;
+
+                    return;
+
+                }
+
+
+                if (
+                    !data.donations ||
+                    data.donations.length === 0
+                ) {
+
+                    container.innerHTML = `
+                        <div class="dashboard-card">
+                            <h3>
+                                No Food Donations Available
+                            </h3>
+
+                            <p>
+                                There are currently no available
+                                food donations.
+                            </p>
+                        </div>
+                    `;
+
+                    return;
+
+                }
+
+
+                container.innerHTML = "";
+
+
+                data.donations.forEach(
+                    function(donation) {
+
+                        const card =
+                            document.createElement("div");
+
+
+                        card.className =
+                            "dashboard-card";
+
+
+                        card.innerHTML = `
+
+                            <h2>
+                                ${escapeHtml(
+                                    donation.food_name
+                                )}
+                            </h2>
+
+                            <p>
+                                <strong>Quantity:</strong>
+                                ${escapeHtml(
+                                    String(donation.quantity)
+                                )}
+                            </p>
+
+                            <p>
+                                <strong>Food Type:</strong>
+                                ${escapeHtml(
+                                    donation.food_type || ""
+                                )}
+                            </p>
+
+                            <p>
+                                <strong>Description:</strong>
+                                ${escapeHtml(
+                                    donation.description ||
+                                    "Not provided"
+                                )}
+                            </p>
+
+                            <p>
+                                <strong>Preparation:</strong>
+                                ${escapeHtml(
+                                    donation.preparation_time ||
+                                    "Not provided"
+                                )}
+                            </p>
+
+                            <p>
+                                <strong>Expiry:</strong>
+                                ${escapeHtml(
+                                    donation.expiry_time ||
+                                    "Not provided"
+                                )}
+                            </p>
+
+                            <p>
+                                <strong>Pickup Address:</strong>
+                                ${escapeHtml(
+                                    donation.pickup_address
+                                )}
+                            </p>
+
+                            <p>
+                                <strong>Donor:</strong>
+                                ${escapeHtml(
+                                    donation.donor_name
+                                )}
+                            </p>
+
+                            <p>
+                                <strong>Status:</strong>
+                                ${escapeHtml(
+                                    donation.status
+                                )}
+                            </p>
+
+                            <button
+                                onclick="claimDonation(
+                                    ${donation.id}
+                                )"
+                            >
+                                Claim Food
+                            </button>
+
+                        `;
+
+
+                        container.appendChild(card);
+
+                    }
+                );
+
+            }
+
+            catch (error) {
+
+                console.error(error);
+
+                container.innerHTML = `
+                    <div class="dashboard-card">
+                        <p style="color:red;">
+                            Unable to connect to the server.
+                        </p>
+                    </div>
+                `;
+
+            }
+
+        }
+
+
+        // =====================================================
+        // CLAIM DONATION
+        // =====================================================
+
+        async function claimDonation(donationId) {
+
+            const confirmation =
+                confirm(
+                    "Are you sure you want to claim this food donation?"
+                );
+
+
+            if (!confirmation) {
+
+                return;
+
+            }
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        `/api/donations/${donationId}/claim`,
+                        {
+
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body: JSON.stringify({
+
+                                ngo_id: ngoId
+
+                            })
+
+                        }
+                    );
+
+
+                const data =
+                    await response.json();
+
+
+                if (data.success) {
+
+                    alert(
+                        "Food donation claimed successfully!"
+                    );
+
+
+                    // Refresh available donations
+                    loadDonations();
+
+                    // Refresh claimed donations
+                    loadClaimedDonations();
+
+                }
+
+                else {
+
+                    alert(
+                        data.message ||
+                        "Unable to claim donation."
+                    );
+
+                }
+
+            }
+
+            catch (error) {
+
+                console.error(error);
+
+                alert(
+                    "Unable to connect to the server."
+                );
+
+            }
+
+        }
+
+
+        // =====================================================
+        // LOAD CLAIMED DONATIONS
+        // =====================================================
+
+        async function loadClaimedDonations() {
+
+            const container =
+                document.getElementById(
+                    "claimedContainer"
+                );
+
+
+            container.innerHTML = `
+                <div class="dashboard-card">
+                    <p>Loading your claimed donations...</p>
+                </div>
+            `;
+
+
+            try {
+
+                /*
+                 * We retrieve all donations and then
+                 * check the donation_claims table through
+                 * the API endpoint below.
+                 */
+
+                const response =
+                    await fetch(
+                        `/api/ngo/${ngoId}/claims`
+                    );
+
+
+                const data =
+                    await response.json();
+
+
+                if (!data.success) {
+
+                    container.innerHTML = `
+                        <div class="dashboard-card">
+                            <p style="color:red;">
+                                ${data.message}
+                            </p>
+                        </div>
+                    `;
+
+                    return;
+
+                }
+
+
+                if (
+                    !data.claims ||
+                    data.claims.length === 0
+                ) {
+
+                    container.innerHTML = `
+                        <div class="dashboard-card">
+
+                            <h3>
+                                No Claimed Donations
+                            </h3>
+
+                            <p>
+                                You have not claimed any
+                                food donations yet.
+                            </p>
+
+                        </div>
+                    `;
+
+                    return;
+
+                }
+
+
+                container.innerHTML = "";
+
+
+                data.claims.forEach(
+                    function(claim) {
+
+                        const card =
+                            document.createElement("div");
+
+
+                        card.className =
+                            "dashboard-card";
+
+
+                        let collectButton = "";
+
+
+                        if (
+                            claim.claim_status ===
+                            "claimed"
+                        ) {
+
+                            collectButton = `
+                                <button
+                                    onclick="markCollected(
+                                        ${claim.donation_id}
+                                    )"
+                                >
+                                    Mark as Collected
+                                </button>
+                            `;
+
+                        }
+
+
+                        card.innerHTML = `
+
+                            <h2>
+                                ${escapeHtml(
+                                    claim.food_name
+                                )}
+                            </h2>
+
+                            <p>
+                                <strong>
+                                    Quantity:
+                                </strong>
+
+                                ${escapeHtml(
+                                    String(
+                                        claim.quantity
+                                    )
+                                )}
+                            </p>
+
+                            <p>
+                                <strong>
+                                    Pickup Address:
+                                </strong>
+
+                                ${escapeHtml(
+                                    claim.pickup_address
+                                )}
+                            </p>
+
+                            <p>
+                                <strong>
+                                    Claim Status:
+                                </strong>
+
+                                ${escapeHtml(
+                                    claim.claim_status
+                                )}
+                            </p>
+
+                            ${collectButton}
+
+                        `;
+
+
+                        container.appendChild(card);
+
+                    }
+                );
+
+            }
+
+            catch (error) {
+
+                console.error(error);
+
+                container.innerHTML = `
+                    <div class="dashboard-card">
+
+                        <p style="color:red;">
+                            Unable to load claimed donations.
+                        </p>
+
+                    </div>
+                `;
+
+            }
+
+        }
+
+
+        // =====================================================
+        // MARK AS COLLECTED
+        // =====================================================
+
+        async function markCollected(
+            donationId
+        ) {
+
+            const confirmation =
+                confirm(
+                    "Have you collected this food donation?"
+                );
+
+
+            if (!confirmation) {
+
+                return;
+
+            }
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        `/api/donations/${donationId}/collect`,
+                        {
+
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body: JSON.stringify({
+
+                                ngo_id: ngoId
+
+                            })
+
+                        }
+                    );
+
+
+                const data =
+                    await response.json();
+
+
+                if (data.success) {
+
+                    alert(
+                        "Food donation marked as collected!"
+                    );
+
+
+                    loadClaimedDonations();
+
+                }
+
+                else {
+
+                    alert(
+                        data.message ||
+                        "Unable to mark donation as collected."
+                    );
+
+                }
+
+            }
+
+            catch (error) {
+
+                console.error(error);
+
+                alert(
+                    "Unable to connect to the server."
+                );
+
+            }
+
+        }
+
+
+        // =====================================================
+        // LOGOUT
+        // =====================================================
+
+        function logout() {
+
+            localStorage.removeItem(
+                "rescueMealUser"
+            );
+
+
+            window.location.href =
+                "/frontend/login.html";
+
+        }
+
+
+        // =====================================================
+        // ESCAPE HTML
+        // =====================================================
+
+        function escapeHtml(value) {
+
+            const div =
+                document.createElement("div");
+
+            div.textContent =
+                value;
+
+            return div.innerHTML;
+
+        }
+
+
+        // =====================================================
+        // INITIAL LOAD
+        // =====================================================
+
+        loadDonations();
+
+        loadClaimedDonations();
+
+    </script>
+
+</body>
+
+</html>

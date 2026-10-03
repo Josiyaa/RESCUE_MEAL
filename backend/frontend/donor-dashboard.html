@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Donor Dashboard - RescueMeal</title>
+
+    <link rel="stylesheet" href="/frontend/style.css">
+</head>
+
+<body>
+
+    <!-- =====================================================
+         HEADER
+         ===================================================== -->
+
+    <header>
+
+        <div class="logo">
+            RescueMeal
+        </div>
+
+        <nav>
+
+            <a href="/dashboard">
+                Home
+            </a>
+
+            <a href="#" onclick="logout()">
+                Logout
+            </a>
+
+        </nav>
+
+    </header>
+
+
+    <!-- =====================================================
+         MAIN CONTENT
+         ===================================================== -->
+
+    <main>
+
+        <section class="dashboard">
+
+            <h1>Donor Dashboard</h1>
+
+            <p id="welcomeMessage"></p>
+
+
+            <!-- =================================================
+                 ADD FOOD DONATION
+                 ================================================= -->
+
+            <div class="dashboard-card">
+
+                <h2>Add Food Donation</h2>
+
+                <p>
+                    Share surplus food that is safe and
+                    available for redistribution.
+                </p>
+
+
+                <form id="donationForm">
+
+                    <!-- FOOD NAME -->
+
+                    <label for="food_name">
+                        Food Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="food_name"
+                        name="food_name"
+                        placeholder="Example: Vegetable Rice"
+                        required
+                    >
+
+
+                    <!-- QUANTITY -->
+
+                    <label for="quantity">
+                        Quantity
+                    </label>
+
+                    <input
+                        type="number"
+                        id="quantity"
+                        name="quantity"
+                        placeholder="Example: 10"
+                        min="1"
+                        required
+                    >
+
+
+                    <!-- FOOD TYPE -->
+
+                    <label for="food_type">
+                        Food Type
+                    </label>
+
+                    <select
+                        id="food_type"
+                        name="food_type"
+                        required
+                    >
+
+                        <option value="">
+                            Select Food Type
+                        </option>
+
+                        <option value="Cooked Food">
+                            Cooked Food
+                        </option>
+
+                        <option value="Raw Food">
+                            Raw Food
+                        </option>
+
+                        <option value="Packaged Food">
+                            Packaged Food
+                        </option>
+
+                        <option value="Bakery">
+                            Bakery
+                        </option>
+
+                        <option value="Fruits">
+                            Fruits
+                        </option>
+
+                        <option value="Vegetables">
+                            Vegetables
+                        </option>
+
+                        <option value="Other">
+                            Other
+                        </option>
+
+                    </select>
+
+
+                    <!-- DESCRIPTION -->
+
+                    <label for="description">
+                        Description
+                    </label>
+
+                    <textarea
+                        id="description"
+                        name="description"
+                        placeholder="Describe the food"
+                        rows="4"
+                    ></textarea>
+
+
+                    <!-- PREPARATION TIME -->
+
+                    <label for="preparation_time">
+                        Preparation Time
+                    </label>
+
+                    <input
+                        type="datetime-local"
+                        id="preparation_time"
+                        name="preparation_time"
+                        required
+                    >
+
+
+                    <!-- EXPIRY TIME -->
+
+                    <label for="expiry_time">
+                        Expiry Time
+                    </label>
+
+                    <input
+                        type="datetime-local"
+                        id="expiry_time"
+                        name="expiry_time"
+                        required
+                    >
+
+
+                    <!-- PICKUP ADDRESS -->
+
+                    <label for="pickup_address">
+                        Pickup Address
+                    </label>
+
+                    <textarea
+                        id="pickup_address"
+                        name="pickup_address"
+                        placeholder="Enter pickup location"
+                        rows="3"
+                        required
+                    ></textarea>
+
+
+                    <!-- SUBMIT -->
+
+                    <button type="submit">
+                        Add Food Donation
+                    </button>
+
+                </form>
+
+
+                <p id="message"></p>
+
+            </div>
+
+
+            <!-- =================================================
+                 MY DONATIONS
+                 ================================================= -->
+
+            <div class="dashboard-card">
+
+                <h2>My Donations</h2>
+
+                <p>
+                    View the food donations you have created
+                    and their current status.
+                </p>
+
+                <button
+                    type="button"
+                    onclick="loadMyDonations()"
+                >
+                    Refresh My Donations
+                </button>
+
+            </div>
+
+
+            <!-- =================================================
+                 DONATION LIST
+                 ================================================= -->
+
+            <div id="myDonationsContainer">
+
+                <div class="dashboard-card">
+
+                    <p>
+                        Loading your donations...
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- =====================================================
+         FOOTER
+         ===================================================== -->
+
+    <footer>
+
+        <p>
+            © 2026 RescueMeal. All Rights Reserved.
+        </p>
+
+    </footer>
+
+
+    <!-- =====================================================
+         JAVASCRIPT
+         ===================================================== -->
+
+    <script>
+
+        // =====================================================
+        // CHECK LOGIN
+        // =====================================================
+
+        const userData =
+            localStorage.getItem("rescueMealUser");
+
+
+        if (!userData) {
+
+            window.location.href =
+                "/frontend/login.html";
+
+        }
+
+
+        const user =
+            JSON.parse(userData);
+
+
+        // =====================================================
+        // CHECK DONOR ROLE
+        // =====================================================
+
+        if (user.role !== "donor") {
+
+            alert(
+                "Only donor users can access this dashboard."
+            );
+
+            window.location.href =
+                "/dashboard";
+
+        }
+
+
+        // =====================================================
+        // WELCOME MESSAGE
+        // =====================================================
+
+        document.getElementById(
+            "welcomeMessage"
+        ).innerText =
+            "Welcome, " + user.name + "!";
+
+
+        // =====================================================
+        // ADD FOOD DONATION
+        // =====================================================
+
+        document.getElementById(
+            "donationForm"
+        ).addEventListener(
+            "submit",
+            async function(event) {
+
+                event.preventDefault();
+
+
+                const message =
+                    document.getElementById(
+                        "message"
+                    );
+
+
+                message.innerText =
+                    "Adding food donation...";
+
+                message.style.color =
+                    "black";
+
+
+                // Get form values
+
+                const food_name =
+                    document.getElementById(
+                        "food_name"
+                    ).value.trim();
+
+
+                const quantity =
+                    document.getElementById(
+                        "quantity"
+                    ).value;
+
+
+                const food_type =
+                    document.getElementById(
+                        "food_type"
+                    ).value;
+
+
+                const description =
+                    document.getElementById(
+                        "description"
+                    ).value.trim();
+
+
+                const preparation_time =
+                    document.getElementById(
+                        "preparation_time"
+                    ).value;
+
+
+                const expiry_time =
+                    document.getElementById(
+                        "expiry_time"
+                    ).value;
+
+
+                const pickup_address =
+                    document.getElementById(
+                        "pickup_address"
+                    ).value.trim();
+
+
+                // =================================================
+                // VALIDATE EXPIRY TIME
+                // =================================================
+
+                if (
+                    new Date(expiry_time) <=
+                    new Date(preparation_time)
+                ) {
+
+                    message.innerText =
+                        "Expiry time must be after preparation time.";
+
+                    message.style.color =
+                        "red";
+
+                    return;
+
+                }
+
+
+                try {
+
+                    // =================================================
+                    // SEND DONATION TO BACKEND
+                    // =================================================
+
+                    const response =
+                        await fetch(
+                            "/api/donations",
+                            {
+
+                                method: "POST",
+
+                                headers: {
+
+                                    "Content-Type":
+                                        "application/json"
+
+                                },
+
+                                body: JSON.stringify({
+
+                                    donor_id:
+                                        user.id,
+
+                                    food_name:
+                                        food_name,
+
+                                    quantity:
+                                        parseInt(quantity),
+
+                                    food_type:
+                                        food_type,
+
+                                    description:
+                                        description,
+
+                                    preparation_time:
+                                        preparation_time,
+
+                                    expiry_time:
+                                        expiry_time,
+
+                                    pickup_address:
+                                        pickup_address
+
+                                })
+
+                            }
+                        );
+
+
+                    const data =
+                        await response.json();
+
+
+                    console.log(
+                        "Donation response:",
+                        data
+                    );
+
+
+                    // =================================================
+                    // SUCCESS
+                    // =================================================
+
+                    if (data.success) {
+
+                        message.innerText =
+                            "Food donation added successfully!";
+
+                        message.style.color =
+                            "green";
+
+
+                        // Clear form
+
+                        document.getElementById(
+                            "donationForm"
+                        ).reset();
+
+
+                        // Refresh My Donations
+
+                        loadMyDonations();
+
+                    }
+
+                    else {
+
+                        message.innerText =
+                            data.message ||
+                            "Failed to add food donation.";
+
+                        message.style.color =
+                            "red";
+
+                    }
+
+                }
+
+                catch (error) {
+
+                    console.error(
+                        "Donation error:",
+                        error
+                    );
+
+
+                    message.innerText =
+                        "Unable to connect to the server.";
+
+                    message.style.color =
+                        "red";
+
+                }
+
+            }
+        );
+
+
+        // =====================================================
+        // LOAD MY DONATIONS
+        // =====================================================
+
+        async function loadMyDonations() {
+
+            const container =
+                document.getElementById(
+                    "myDonationsContainer"
+                );
+
+
+            container.innerHTML = `
+                <div class="dashboard-card">
+                    <p>
+                        Loading your donations...
+                    </p>
+                </div>
+            `;
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        `/api/donations/donor/${user.id}`
+                    );
+
+
+                const data =
+                    await response.json();
+
+
+                console.log(
+                    "My donations response:",
+                    data
+                );
+
+
+                if (!data.success) {
+
+                    container.innerHTML = `
+                        <div class="dashboard-card">
+
+                            <p style="color:red;">
+                                ${
+                                    data.message ||
+                                    "Unable to load donations."
+                                }
+                            </p>
+
+                        </div>
+                    `;
+
+                    return;
+
+                }
+
+
+                // =================================================
+                // NO DONATIONS
+                // =================================================
+
+                if (
+                    !data.donations ||
+                    data.donations.length === 0
+                ) {
+
+                    container.innerHTML = `
+                        <div class="dashboard-card">
+
+                            <h3>
+                                No Donations Yet
+                            </h3>
+
+                            <p>
+                                You have not added any food
+                                donations yet.
+                            </p>
+
+                        </div>
+                    `;
+
+                    return;
+
+                }
+
+
+                // Clear container
+
+                container.innerHTML = "";
+
+
+                // =================================================
+                // DISPLAY DONATIONS
+                // =================================================
+
+                data.donations.forEach(
+                    function(donation) {
+
+                        const card =
+                            document.createElement(
+                                "div"
+                            );
+
+
+                        card.className =
+                            "dashboard-card";
+
+
+                        // Determine status
+
+                        let statusText =
+                            donation.status ||
+                            "available";
+
+
+                        let statusClass =
+                            statusText.toLowerCase();
+
+
+                        card.innerHTML = `
+
+                            <h2>
+                                ${escapeHtml(
+                                    donation.food_name
+                                )}
+                            </h2>
+
+
+                            <p>
+                                <strong>
+                                    Quantity:
+                                </strong>
+
+                                ${escapeHtml(
+                                    String(
+                                        donation.quantity
+                                    )
+                                )}
+                            </p>
+
+
+                            <p>
+                                <strong>
+                                    Food Type:
+                                </strong>
+
+                                ${escapeHtml(
+                                    donation.food_type ||
+                                    "Not provided"
+                                )}
+                            </p>
+
+
+                            <p>
+                                <strong>
+                                    Description:
+                                </strong>
+
+                                ${escapeHtml(
+                                    donation.description ||
+                                    "Not provided"
+                                )}
+                            </p>
+
+
+                            <p>
+                                <strong>
+                                    Pickup Address:
+                                </strong>
+
+                                ${escapeHtml(
+                                    donation.pickup_address ||
+                                    "Not provided"
+                                )}
+                            </p>
+
+
+                            <p>
+                                <strong>
+                                    Preparation Time:
+                                </strong>
+
+                                ${escapeHtml(
+                                    donation.preparation_time ||
+                                    "Not provided"
+                                )}
+                            </p>
+
+
+                            <p>
+                                <strong>
+                                    Expiry Time:
+                                </strong>
+
+                                ${escapeHtml(
+                                    donation.expiry_time ||
+                                    "Not provided"
+                                )}
+                            </p>
+
+
+                            <p>
+                                <strong>
+                                    Status:
+                                </strong>
+
+                                <span class="status ${statusClass}">
+                                    ${escapeHtml(
+                                        statusText
+                                    )}
+                                </span>
+                            </p>
+
+                        `;
+
+
+                        container.appendChild(
+                            card
+                        );
+
+                    }
+                );
+
+            }
+
+            catch (error) {
+
+                console.error(
+                    "My donations error:",
+                    error
+                );
+
+
+                container.innerHTML = `
+                    <div class="dashboard-card">
+
+                        <p style="color:red;">
+                            Unable to connect to the server.
+                        </p>
+
+                    </div>
+                `;
+
+            }
+
+        }
+
+
+        // =====================================================
+        // LOGOUT
+        // =====================================================
+
+        function logout() {
+
+            localStorage.removeItem(
+                "rescueMealUser"
+            );
+
+
+            window.location.href =
+                "/frontend/login.html";
+
+        }
+
+
+        // =====================================================
+        // ESCAPE HTML
+        // =====================================================
+
+        function escapeHtml(value) {
+
+            const div =
+                document.createElement(
+                    "div"
+                );
+
+
+            div.textContent =
+                value;
+
+
+            return div.innerHTML;
+
+        }
+
+
+        // =====================================================
+        // INITIAL LOAD
+        // =====================================================
+
+        loadMyDonations();
+
+    </script>
+
+</body>
+
+</html>

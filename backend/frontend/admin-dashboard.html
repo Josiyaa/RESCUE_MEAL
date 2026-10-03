@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Dashboard - RescueMeal</title>
+
+    <link rel="stylesheet"
+          href="/frontend/style.css">
+
+</head>
+
+
+<body>
+
+<header>
+
+    <div class="logo">
+        RescueMeal
+    </div>
+
+    <nav>
+
+        <a href="/dashboard">
+            Home
+        </a>
+
+        <a href="#" onclick="logout()">
+            Logout
+        </a>
+
+    </nav>
+
+</header>
+
+
+<main>
+
+<section class="dashboard">
+
+    <h1>
+        Admin Dashboard
+    </h1>
+
+    <p id="welcomeMessage">
+        Welcome, Admin!
+    </p>
+
+
+    <!-- =====================================================
+         STATISTICS
+         ===================================================== -->
+
+    <div class="admin-stats">
+
+
+        <div class="stat-card">
+
+            <h3>
+                Total Users
+            </h3>
+
+            <p id="totalUsers">
+                0
+            </p>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <h3>
+                Donors
+            </h3>
+
+            <p id="totalDonors">
+                0
+            </p>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <h3>
+                NGOs
+            </h3>
+
+            <p id="totalNgos">
+                0
+            </p>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <h3>
+                Admins
+            </h3>
+
+            <p id="totalAdmins">
+                0
+            </p>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <h3>
+                Total Donations
+            </h3>
+
+            <p id="totalDonations">
+                0
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         DONATION STATUS
+         ===================================================== -->
+
+    <div class="dashboard-card">
+
+        <h2>
+            Donation Status
+        </h2>
+
+        <p>
+            Available:
+            <strong id="availableCount">0</strong>
+        </p>
+
+        <p>
+            Claimed:
+            <strong id="claimedCount">0</strong>
+        </p>
+
+        <p>
+            Collected:
+            <strong id="collectedCount">0</strong>
+        </p>
+
+    </div>
+
+
+    <!-- =====================================================
+         ALL USERS
+         ===================================================== -->
+
+    <div class="dashboard-card">
+
+        <h2>
+            Donors & NGOs
+        </h2>
+
+        <button onclick="loadUsers()">
+            Refresh Users
+        </button>
+
+        <div id="usersContainer">
+
+            <p>
+                Loading users...
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         REGISTERED NGOS
+         ===================================================== -->
+
+    <div class="dashboard-card">
+
+        <h2>
+            Registered NGOs
+        </h2>
+
+        <button onclick="loadNgos()">
+            Refresh NGOs
+        </button>
+
+        <div id="ngosContainer">
+
+            <p>
+                Loading NGOs...
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         ALL DONATIONS
+         ===================================================== -->
+
+    <div class="dashboard-card">
+
+        <h2>
+            All Food Donations
+        </h2>
+
+        <button onclick="loadDonations()">
+            Refresh Donations
+        </button>
+
+        <div id="donationsContainer">
+
+            <p>
+                Loading donations...
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+</main>
+
+
+<footer>
+
+    <p>
+        © 2026 RescueMeal. All Rights Reserved.
+    </p>
+
+</footer>
+
+
+<script>
+
+
+// ============================================================
+// CHECK LOGIN
+// ============================================================
+
+const userData =
+    localStorage.getItem("rescueMealUser");
+
+
+if (!userData) {
+
+    window.location.href =
+        "/frontend/login.html";
+
+}
+
+
+const user =
+    JSON.parse(userData);
+
+
+// ============================================================
+// CHECK ADMIN ROLE
+// ============================================================
+
+if (user.role !== "admin") {
+
+    alert(
+        "Only administrators can access this dashboard."
+    );
+
+    window.location.href =
+        "/dashboard";
+
+}
+
+
+// ============================================================
+// WELCOME MESSAGE
+// ============================================================
+
+document.getElementById(
+    "welcomeMessage"
+).innerText =
+    "Welcome, " + user.name + "!";
+
+
+// ============================================================
+// LOAD STATISTICS
+// ============================================================
+
+async function loadStats() {
+
+    try {
+
+        const response =
+            await fetch("/api/admin/stats");
+
+        const data =
+            await response.json();
+
+
+        if (!data.success) {
+
+            console.error(data.message);
+
+            return;
+
+        }
+
+
+        const stats =
+            data.stats;
+
+
+        document.getElementById(
+            "totalUsers"
+        ).innerText =
+            stats.total_users;
+
+
+        document.getElementById(
+            "totalDonors"
+        ).innerText =
+            stats.total_donors;
+
+
+        document.getElementById(
+            "totalNgos"
+        ).innerText =
+            stats.total_ngos;
+
+
+        document.getElementById(
+            "totalAdmins"
+        ).innerText =
+            stats.total_admins;
+
+
+        document.getElementById(
+            "totalDonations"
+        ).innerText =
+            stats.total_donations;
+
+
+        document.getElementById(
+            "availableCount"
+        ).innerText =
+            stats.available;
+
+
+        document.getElementById(
+            "claimedCount"
+        ).innerText =
+            stats.claimed;
+
+
+        document.getElementById(
+            "collectedCount"
+        ).innerText =
+            stats.collected;
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Statistics error:",
+            error
+        );
+
+    }
+
+}
+
+
+// ============================================================
+// LOAD DONORS AND NGOS AS USERS
+// ============================================================
+
+async function loadUsers() {
+
+    const container =
+        document.getElementById(
+            "usersContainer"
+        );
+
+
+    container.innerHTML =
+        "<p>Loading users...</p>";
+
+
+    try {
+
+        const response =
+            await fetch("/api/admin/users");
+
+
+        const data =
+            await response.json();
+
+
+        if (!data.success) {
+
+            container.innerHTML =
+                `<p>${data.message}</p>`;
+
+            return;
+
+        }
+
+
+        if (data.users.length === 0) {
+
+            container.innerHTML =
+                "<p>No donors or NGOs found.</p>";
+
+            return;
+
+        }
+
+
+        container.innerHTML = "";
+
+
+        data.users.forEach(
+            currentUser => {
+
+                const card =
+                    document.createElement("div");
+
+
+                card.className =
+                    "admin-item";
+
+
+                card.innerHTML = `
+
+                    <h3>
+                        ${escapeHtml(currentUser.name)}
+                    </h3>
+
+                    <p>
+                        <strong>Email:</strong>
+                        ${escapeHtml(currentUser.email)}
+                    </p>
+
+                    <p>
+                        <strong>Role:</strong>
+                        ${escapeHtml(currentUser.role)}
+                    </p>
+
+                    <p>
+                        <strong>Phone:</strong>
+                        ${escapeHtml(
+                            currentUser.phone || "N/A"
+                        )}
+                    </p>
+
+                    <p>
+                        <strong>Address:</strong>
+                        ${escapeHtml(
+                            currentUser.address || "N/A"
+                        )}
+                    </p>
+
+                `;
+
+
+                container.appendChild(card);
+
+            }
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+        container.innerHTML =
+            "<p>Unable to load users.</p>";
+
+    }
+
+}
+
+
+// ============================================================
+// LOAD NGOS
+// ============================================================
+
+async function loadNgos() {
+
+    const container =
+        document.getElementById(
+            "ngosContainer"
+        );
+
+
+    container.innerHTML =
+        "<p>Loading NGOs...</p>";
+
+
+    try {
+
+        const response =
+            await fetch("/api/admin/ngos");
+
+
+        const data =
+            await response.json();
+
+
+        if (!data.success) {
+
+            container.innerHTML =
+                `<p>${data.message}</p>`;
+
+            return;
+
+        }
+
+
+        if (data.ngos.length === 0) {
+
+            container.innerHTML =
+                "<p>No NGOs found.</p>";
+
+            return;
+
+        }
+
+
+        container.innerHTML = "";
+
+
+        data.ngos.forEach(
+            ngo => {
+
+                const card =
+                    document.createElement("div");
+
+
+                card.className =
+                    "admin-item";
+
+
+                card.innerHTML = `
+
+                    <h3>
+                        ${escapeHtml(
+                            ngo.organization_name
+                        )}
+                    </h3>
+
+                    <p>
+                        <strong>Contact:</strong>
+                        ${escapeHtml(
+                            ngo.name
+                        )}
+                    </p>
+
+                    <p>
+                        <strong>Email:</strong>
+                        ${escapeHtml(
+                            ngo.email
+                        )}
+                    </p>
+
+                    <p>
+                        <strong>Phone:</strong>
+                        ${escapeHtml(
+                            ngo.phone || "N/A"
+                        )}
+                    </p>
+
+                    <p>
+                        <strong>Address:</strong>
+                        ${escapeHtml(
+                            ngo.address || "N/A"
+                        )}
+                    </p>
+
+                    <p>
+                        <strong>Service Area:</strong>
+                        ${escapeHtml(
+                            ngo.service_area || "N/A"
+                        )}
+                    </p>
+
+                    <p>
+                        <strong>Status:</strong>
+                        ${escapeHtml(
+                            ngo.status || "N/A"
+                        )}
+                    </p>
+
+                `;
+
+
+                container.appendChild(card);
+
+            }
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+        container.innerHTML =
+            "<p>Unable to load NGOs.</p>";
+
+    }
+
+}
+
+
+// ============================================================
+// LOAD ALL DONATIONS
+// ============================================================
+
+async function loadDonations() {
+
+    const container =
+        document.getElementById(
+            "donationsContainer"
+        );
+
+
+    container.innerHTML =
+        "<p>Loading donations...</p>";
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/admin/donations"
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (!data.success) {
+
+            container.innerHTML =
+                `<p>${data.message}</p>`;
+
+            return;
+
+        }
+
+
+        if (data.donations.length === 0) {
+
+            container.innerHTML =
+                "<p>No donations found.</p>";
+
+            return;
+
+        }
+
+
+        container.innerHTML = "";
+
+
+        data.donations.forEach(
+            donation => {
+
+                const card =
+                    document.createElement("div");
+
+
+                card.className =
+                    "admin-item";
+
+
+                card.innerHTML = `
+
+                    <h3>
+                        ${escapeHtml(
+                            donation.food_name
+                        )}
+                    </h3>
+
+                    <p>
+                        <strong>Quantity:</strong>
+                        ${escapeHtml(
+                            String(
+                                donation.quantity
+                            )
+                        )}
+                    </p>
+
+                    <p>
+                        <strong>Food Type:</strong>
+                        ${escapeHtml(
+                            donation.food_type || "N/A"
+                        )}
+                    </p>
+
+                    <p>
+                        <strong>Donor:</strong>
+                        ${escapeHtml(
+                            donation.donor_name
+                        )}
+                    </p>
+
+                    <p>
+                        <strong>Pickup Address:</strong>
+                        ${escapeHtml(
+                            donation.pickup_address
+                        )}
+                    </p>
+
+                    <p>
+                        <strong>Status:</strong>
+
+                        <span class="status ${donation.status}">
+                            ${escapeHtml(
+                                donation.status
+                            )}
+                        </span>
+
+                    </p>
+
+                `;
+
+
+                container.appendChild(card);
+
+            }
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+        container.innerHTML =
+            "<p>Unable to load donations.</p>";
+
+    }
+
+}
+
+
+// ============================================================
+// ESCAPE HTML
+// ============================================================
+
+function escapeHtml(value) {
+
+    const div =
+        document.createElement("div");
+
+    div.textContent =
+        value;
+
+    return div.innerHTML;
+
+}
+
+
+// ============================================================
+// LOGOUT
+// ============================================================
+
+function logout() {
+
+    localStorage.removeItem(
+        "rescueMealUser"
+    );
+
+    window.location.href =
+        "/frontend/login.html";
+
+}
+
+
+// ============================================================
+// INITIAL LOAD
+// ============================================================
+
+loadStats();
+loadUsers();
+loadNgos();
+loadDonations();
+
+</script>
+
+</body>
+
+</html>
